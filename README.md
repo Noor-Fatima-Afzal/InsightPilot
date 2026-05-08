@@ -74,15 +74,15 @@ flowchart LR
     Report --> Orchestrator
 
     Orchestrator --> SessionStore[(In-memory Session State)]
-    Orchestrator --> ModeContext[Mode-aware Context Builder\n(research or company_audit)]
+    Orchestrator --> ModeContext[Mode-aware Context Builder<br/>research or company_audit]
 
     ModeContext --> ResearchAgent[Research Agent]
     ResearchAgent --> CompetitorAgent[Competitor Agent]
     CompetitorAgent --> StrategyAgent[Strategy Agent]
     StrategyAgent --> ReportAgent[Report Agent]
 
-    ReportAgent --> ExecutiveReport[ExecutiveReport\n(Pydantic schema)]
-    Orchestrator --> SSEEvents[SSE Event Envelope\nagent_start, research_complete, competitor_found, insight_generated, workflow_complete]
+    ReportAgent --> ExecutiveReport[ExecutiveReport<br/>Pydantic schema]
+    Orchestrator --> SSEEvents[SSE Event Envelope<br/>agent_start, research_complete, competitor_found, insight_generated, workflow_complete]
   end
 
   %% External intelligence + reasoning services
