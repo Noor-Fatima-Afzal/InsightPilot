@@ -1,0 +1,30 @@
+# Root .gitignore
+node_modules/
+.env
+.env.local
+.env.*.local
+dist/
+build/
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.vscode/
+.idea/
+*.egg-info/
+.next/
+out/
+
+# secrets
+.env
+.env.*
+*.key
+
+# system files
+.DS_Store
+node_modules
+
+# logs
+*.log
