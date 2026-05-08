@@ -65,8 +65,8 @@ flowchart LR
 
   %% API surface
   UI -->|POST /api/research/analyze| Analyze[FastAPI Route: Start Analysis]
-  UI -->|GET /api/research/stream/{session_id}| Stream[FastAPI Route: SSE Stream]
-  UI -->|GET /api/research/report/{session_id}| Report[FastAPI Route: Final Report]
+  UI -->|GET /api/research/stream/:session_id| Stream[FastAPI Route: SSE Stream]
+  UI -->|GET /api/research/report/:session_id| Report[FastAPI Route: Final Report]
 
   subgraph Backend[FastAPI Backend Runtime]
     Analyze --> Orchestrator[AgentOrchestrator]
