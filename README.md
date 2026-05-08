@@ -59,24 +59,42 @@ The system uses a FastAPI backend, a Next.js frontend, and an agent pipeline tha
 ## Architecture
 
 ```mermaid
-graph TD
-    A[User Input] --> B[Orchestrator]
-    B --> C[Research Agent]
-    C --> D[Competitor Agent]
-    D --> E[Strategy Agent]
-    E --> F[Report Agent]
-    F --> G[Executive Report]
+flowchart LR
+  %% Client
+  User[Founder, Analyst, Consultant] --> UI[Next.js Frontend]
 
-    B --> H[Strategy Research Mode]
-    B --> I[Company Audit Mode]
+  %% API surface
+  UI -->|POST /api/research/analyze| Analyze[FastAPI Route: Start Analysis]
+  UI -->|GET /api/research/stream/{session_id}| Stream[FastAPI Route: SSE Stream]
+  UI -->|GET /api/research/report/{session_id}| Report[FastAPI Route: Final Report]
 
-    style A fill:#f4f4f4,stroke:#333
-    style B fill:#dbeafe,stroke:#333
-    style C fill:#dcfce7,stroke:#333
-    style D fill:#fef3c7,stroke:#333
-    style E fill:#fde68a,stroke:#333
-    style F fill:#e9d5ff,stroke:#333
-    style G fill:#cffafe,stroke:#333
+  subgraph Backend[FastAPI Backend Runtime]
+    Analyze --> Orchestrator[AgentOrchestrator]
+    Stream --> Orchestrator
+    Report --> Orchestrator
+
+    Orchestrator --> SessionStore[(In-memory Session State)]
+    Orchestrator --> ModeContext[Mode-aware Context Builder\n(research or company_audit)]
+
+    ModeContext --> ResearchAgent[Research Agent]
+    ResearchAgent --> CompetitorAgent[Competitor Agent]
+    CompetitorAgent --> StrategyAgent[Strategy Agent]
+    StrategyAgent --> ReportAgent[Report Agent]
+
+    ReportAgent --> ExecutiveReport[ExecutiveReport\n(Pydantic schema)]
+    Orchestrator --> SSEEvents[SSE Event Envelope\nagent_start, research_complete, competitor_found, insight_generated, workflow_complete]
+  end
+
+  %% External intelligence + reasoning services
+  ResearchAgent --> Tavily[Tavily Search API]
+  CompetitorAgent --> Groq[Groq LLM]
+  StrategyAgent --> Groq
+  ReportAgent --> Groq
+
+  SSEEvents --> Stream
+  ExecutiveReport --> Report
+  Stream --> UI
+  Report --> UI
 ```
 
 ### End-to-End Flow
